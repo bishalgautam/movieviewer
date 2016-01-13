@@ -1,0 +1,6 @@
+framework module Pods_movieviewer {
+  umbrella header "Pods-movieviewer-umbrella.h"
+
+  export *
+  module * { export * }
+}
