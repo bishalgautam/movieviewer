@@ -8,6 +8,8 @@
 
 import UIKit
 import AFNetworking
+import EZLoadingActivity
+
 
 class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
      var refreshControl: UIRefreshControl!
@@ -15,13 +17,22 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
     @IBOutlet weak var tableView: UITableView!
     var movies: [NSDictionary]?
     
-    
+    override func viewDidAppear(animated: Bool) {
+        
+        
+        // EZLoadingActivity.show("Loading...", disableUI: true)
+        
+        EZLoadingActivity.showWithDelay("Loading...", disableUI: false, seconds:2 )
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
         
         tableView.dataSource = self
         tableView.delegate = self
+        
+        
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
@@ -41,8 +52,12 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
                             
                          self.movies = responseDictionary["results"] as? [NSDictionary]
                             self.tableView.reloadData()
+                            EZLoadingActivity.hide(success: true, animated: true)
                     }
-                }
+                } else
+                 {
+                            EZLoadingActivity.hide(success: false, animated: true)
+                 }
                 
         });
             task.resume()
