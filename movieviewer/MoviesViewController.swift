@@ -16,13 +16,12 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
 
     @IBOutlet weak var tableView: UITableView!
     var movies: [NSDictionary]?
+    var endpoint: String!
+    
     
     override func viewDidAppear(animated: Bool) {
-        
-        
-        // EZLoadingActivity.show("Loading...", disableUI: true)
-        
-        EZLoadingActivity.showWithDelay("Loading...", disableUI: false, seconds:2 )
+           // EZLoadingActivity.show("Loading...", disableUI: true)
+             EZLoadingActivity.showWithDelay("Loading...", disableUI: false, seconds:2 )
     }
     
     override func viewDidLoad() {
@@ -35,7 +34,7 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
         
         
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = NSURL(string:"https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -88,9 +87,29 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
         }
         func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
             
+           
             
             let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
-        
+            
+            /*if(cell.selected)
+            {
+                cell.backgroundColor = UIColor.redColor()
+                
+            }
+            else
+            {*/
+                 cell.backgroundColor = UIColor.grayColor()
+            //}
+            // cell.textLabel.backgroundColor = UIColor.blackColor() 
+            
+             //cell color
+            
+             //cell.selectionStyle = .Blue
+            
+            //cell background 
+            let backgroundView = UIView()
+            backgroundView.backgroundColor = UIColor.blueColor()
+            cell.selectedBackgroundView = backgroundView
             
             let movie = movies![indexPath.row]
             let title = movie["title"] as! String
@@ -127,20 +146,15 @@ class MoviesViewController: UIViewController,UITableViewDataSource,UITableViewDe
             self.refreshControl.endRefreshing()
         })
     }
-
-    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+       override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         let cell = sender as! UITableViewCell
         let indexPath =  tableView.indexPathForCell(cell)
-        
         let movie = movies![indexPath!.row]
         let detailViewController = segue.destinationViewController as! DetailViewController
-        detailViewController.movie = movie
-        
-        
+            detailViewController.movie = movie
         print("prepare for segue")
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
